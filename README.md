@@ -1,6 +1,15 @@
-3D Scene testing out some lightechniques
+# ✨ OpenGL Lighting Playground(3DFirmament)
 
-First Rendered Scenes:
+![Scene Render](https://github.com/.../image.png)
 
+Experimenting with light and shadow in C++/OpenGL.
 
-![rendered scene](https://github.com/user-attachments/assets/6fabfe1f-1b94-49b7-ad0f-ecde7caf84e1)
+## 🔧 Tech
+- C++
+- OpenGL
+- GLFW
+
+## 🌟 Features
+- Dynamic shadows  
+- Specular highlights  
+- Multiple light types
