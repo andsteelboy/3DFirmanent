@@ -346,10 +346,10 @@ int main(void)
         // Set the projection and view matrices
         glUniformMatrix4fv(projLocLighting, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(viewLocLighting, 1, GL_FALSE, glm::value_ptr(view));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, lightCubePosition[i]);
-            model = glm::scale(model, glm::vec3(0.2f));
+            model = glm::scale(model, glm::vec3(1.2f));
             int lightingLoc = glGetUniformLocation(lightingProgram, "model");
             glUniformMatrix4fv(lightingLoc, 1, GL_FALSE, glm::value_ptr(model));
             glBindVertexArray(lightVAO);
