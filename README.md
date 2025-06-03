@@ -1,4 +1,6 @@
 3D Scene testing out some lightechniques
 
 First Rendered Scenes:
-![second render with light sources](https://github.com/user-attachments/assets/2de1cd1d-7881-4bed-ae80-ebe1cfbf100f)
+
+
+![rendered scene](https://github.com/user-attachments/assets/6fabfe1f-1b94-49b7-ad0f-ecde7caf84e1)
