@@ -349,7 +349,7 @@ int main(void)
         for (int i = 0; i < 2; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, lightCubePosition[i]);
-            model = glm::scale(model, glm::vec3(1.2f));
+            model = glm::scale(model, glm::vec3(0.2f));
             int lightingLoc = glGetUniformLocation(lightingProgram, "model");
             glUniformMatrix4fv(lightingLoc, 1, GL_FALSE, glm::value_ptr(model));
             glBindVertexArray(lightVAO);
