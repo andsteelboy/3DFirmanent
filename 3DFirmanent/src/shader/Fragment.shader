@@ -2,22 +2,24 @@
 out vec4 FragColor;
 in vec4 vertexColor;
 in vec2 TexCoord;
+in vec3 FragPos;
+in vec3 Normal;
 
 uniform sampler2D texture1;
 uniform sampler2D texture2;
 
+uniform vec3 objectColor;
+uniform vec3 lightColor;
+uniform vec3 lightPos;
+
 void main()
 {
-    // Mix the two textures (50% each)
-    vec3 texColor = mix(
-        texture(texture1, TexCoord).rgb,
-        texture(texture2, TexCoord).rgb,
-        0.1
-    );
-
-    // Fake "lighting" using texture coordinates (cheap trick)
-    float light = max(TexCoord.x + TexCoord.y, 0.3); // Brightens diagonally
-
-    // Apply to texture
-    FragColor = vec4(texColor * light, 1.0);
+    float ambientStrength = 0.4f;
+    vec3 ambientColor = ambientStrength * lightColor;
+    vec3 normal = normalize(Normal);
+    vec3 lightDir = normalize(lightPos-FragPos);
+    float diffuse = max(dot(normal, lightDir), 0.0f);
+    vec3 diffuseColor = diffuse * lightColor;
+    vec3 result = (ambientColor+diffuseColor) * objectColor;
+    FragColor = vec4(result, 1.0);
 }
