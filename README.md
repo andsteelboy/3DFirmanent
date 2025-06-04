@@ -1,6 +1,7 @@
 # ✨ OpenGL Lighting Playground(3DFirmament)
 
-![rendered scene](https://github.com/user-attachments/assets/e909a375-1dd9-497e-83d4-80dee4fa2c88)
+![specular light](https://github.com/user-attachments/assets/5d47ce15-3c88-4e7f-889d-ce5f8e21e830)
+
 
 
 Experimenting with light and shadow in C++/OpenGL.
