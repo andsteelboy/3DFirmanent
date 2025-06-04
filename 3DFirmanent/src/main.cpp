@@ -279,7 +279,7 @@ int main(void)
     glUniform1i(glGetUniformLocation(shaderPorgram, "texture1"), 0);
     glUniform1i(glGetUniformLocation(shaderPorgram, "texture2"), 1);
 
-    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+    
     //lighting VAO
     glUseProgram(lightingProgram);
     unsigned int lightVAO;
@@ -303,7 +303,10 @@ int main(void)
         glm::vec3(3.0f,6.0f,8.0f)
     };
 
+    glm::vec3 lightPosition = (textureCubePosition[0] + textureCubePosition[1] + textureCubePosition[2]) / 3.0f;
 
+    // Move the light slightly above and behind for better illumination
+    
 
 
     glEnable(GL_DEPTH_TEST);
@@ -312,7 +315,7 @@ int main(void)
     {
 
         processInput(window);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.2f, 0.2f, 0.173f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         /* Render here */
         glUseProgram(shaderPorgram);
@@ -324,7 +327,12 @@ int main(void)
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glUniform3f(glGetUniformLocation(shaderPorgram, "lightColor"), 1.0f, 1.0f, 1.0f);
         glUniform3f(glGetUniformLocation(shaderPorgram, "objectColor"), 1.0f, 0.5f, 0.31f);
-        glUniform3f(glGetUniformLocation(shaderPorgram, "lightPos"), 1.2f, 1.0f, 2.0f);
+        glUniform3f(glGetUniformLocation(shaderPorgram, "lightPos"), 1.2f, 1.0f, 2.0f); //lightPos
+        glUniform3f(glGetUniformLocation(shaderPorgram, "viewPos"), mainCamera.cameraPos.x,mainCamera.cameraPos.y,mainCamera.cameraPos.z);
+        glUniform3f(glGetUniformLocation(shaderPorgram, "material.ambient"), 0.02f, 0.11f, 0.06f);
+        glUniform3f(glGetUniformLocation(shaderPorgram, "material.diffuse"), 0.08f, 0.4f, 0.18f);
+        glUniform3f(glGetUniformLocation(shaderPorgram, "material.specular"), 0.5f, 1.0f, 0.5f);
+        glUniform1f(glGetUniformLocation(shaderPorgram, "material.shininess"), 256.0f);
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::lookAt(mainCamera.GetPosition(), mainCamera.GetPosition() + mainCamera.GetCameraDirection(), mainCamera.GetUp());
         glm::mat4 projection = glm::mat4(1.0f);
@@ -355,7 +363,9 @@ int main(void)
         glUniformMatrix4fv(projLocLighting, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(viewLocLighting, 1, GL_FALSE, glm::value_ptr(view));
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
+        lightPosition.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+        lightPosition.y = sin(glfwGetTime() / 2.0f) * 1.0f;
+        model = glm::translate(model, (float)sin(glfwGetTime())*(float)sin(glfwGetTime())*lightPosition);
         model = glm::scale(model, glm::vec3(0.2f));
         int lightingLoc = glGetUniformLocation(lightingProgram, "model");
         glUniformMatrix4fv(lightingLoc, 1, GL_FALSE, glm::value_ptr(model));
