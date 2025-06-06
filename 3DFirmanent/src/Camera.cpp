@@ -10,6 +10,8 @@ Camera::Camera()
     //TODO:fix magic numbers
     cameraYaw = 0;
     cameraPitch = 0;
+    cameralastX = 0.0f;
+    cameralastY = 0.0f;
 }
 
 
