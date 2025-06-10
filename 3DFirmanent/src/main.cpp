@@ -297,9 +297,16 @@ int main(void)
     };
     //textured cube postions
     glm::vec3 textureCubePosition[] = {
-        glm::vec3(0.0f,4.0f,3.0f),
-        glm::vec3(10.0f,5.0f,3.0f),
-        glm::vec3(3.0f,10.0f,8.0f)
+        glm::vec3(0.0f,  0.0f,  0.0f),
+        glm::vec3(2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f,  2.0f, -2.5f),
+        glm::vec3(1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
     glm::vec3 lightPosition = (textureCubePosition[0] + textureCubePosition[1] + textureCubePosition[2]) / 3.0f;
@@ -336,6 +343,7 @@ int main(void)
         glUniform3f(glGetUniformLocation(shaderPorgram, "light.ambient"), 0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(shaderPorgram, "light.diffuse"), 0.9f, 0.8f, 0.6f);
         glUniform3f(glGetUniformLocation(shaderPorgram, "light.specular"), 1.0f, 1.0f, 0.9f);
+        glUniform3f(glGetUniformLocation(shaderPorgram, "light.direction"), -0.2f, -1.0f, -0.3f);
 
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::lookAt(mainCamera.GetPosition(), mainCamera.GetPosition() + mainCamera.GetCameraDirection(), mainCamera.GetUp());
@@ -346,11 +354,11 @@ int main(void)
 
         int projectionLoc = glGetUniformLocation(shaderPorgram, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             float angle = 40.0f;
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, textureCubePosition[i]);
-            //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));  // Fixed rotation axis
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));  // Fixed rotation axis
 
             int modelLoc = glGetUniformLocation(shaderPorgram, "model");
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
