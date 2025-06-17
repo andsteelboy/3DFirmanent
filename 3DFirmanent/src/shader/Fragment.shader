@@ -40,9 +40,9 @@ void main()
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * vec3(texture(material.diffuse,TexCoord)) * light.diffuse;
 
-    // Specular (Blinn-Phong optimization)
+    
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 halfwayDir = normalize(lightDir + viewDir);  // Faster than reflect()
+    vec3 halfwayDir = reflect(lightDir);
     float spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
     vec3 specular = spec * vec3(texture(material.specular,TexCoord)) * light.specular;
 
