@@ -59,7 +59,7 @@ void main()
 
         // Combine results
         vec3 result = ambient + diffuse + specular;
-        FragColor = vec4(result,1.0f);
+        FragColor = vec4(result , 1.0f);
     }
     else
     {

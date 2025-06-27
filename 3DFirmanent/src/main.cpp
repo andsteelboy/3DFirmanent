@@ -14,6 +14,7 @@
 #include "Shader.h"
 
 
+
 const unsigned int WIDTH = 640;
 const unsigned int HEIGHT = 480;
 
@@ -323,6 +324,7 @@ int main(void)
         processInput(window);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram(shaderPorgram);
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::lookAt(mainCamera.cameraPos, mainCamera.cameraPos + mainCamera.GetCameraDirection(), mainCamera.GetUp());
         glm::mat4 projection = glm::mat4(1.0f);
@@ -333,8 +335,6 @@ int main(void)
         int projectionLoc = glGetUniformLocation(shaderPorgram, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-
-        glUseProgram(shaderPorgram);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
 
@@ -360,20 +360,18 @@ int main(void)
         glUniform1f(glGetUniformLocation(shaderPorgram, "light.quadratic"), 0.032f);
         */
         // Spotlight position (camera position)
-        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.position"),
-            mainCamera.cameraPos.x,
-            mainCamera.cameraPos.y,
-            mainCamera.cameraPos.z);
-
+        
+        
+        glUniform3fv(glGetUniformLocation(shaderPorgram, "spotLight.position"),1,&mainCamera.cameraPos.x);
+        
+        
         // Spotlight direction (camera forward)
-        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.direction"),
-            mainCamera.GetCameraDirection().x,
-            mainCamera.GetCameraDirection().y,
-            mainCamera.GetCameraDirection().z);
+        glUniform3fv(glGetUniformLocation(shaderPorgram, "spotLight.direction"), 1, &mainCamera.cameraDirection.x);
+        
 
         // SUPER WIDE angle (45 degrees instead of 30)
         glUniform1f(glGetUniformLocation(shaderPorgram, "spotLight.cutOff"),
-            glm::cos(glm::radians(45.0f)));
+            glm::cos(glm::radians(20.0f)));
 
         // BRIGHT ambient light (white)
         glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.ambient"),

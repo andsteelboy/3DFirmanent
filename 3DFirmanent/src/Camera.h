@@ -14,11 +14,12 @@ public:
 	glm::vec3 GetCameraDirection();
 	void MouseCallBack(GLFWwindow* window,float xpos, float ypos); //IE:handles all rotation as well as yaw
 	glm::vec3 cameraPos;
+	glm::vec3 cameraDirection;
 
 private:
 	glm::vec3 upVector;
 	glm::vec3 lookAtVector;
-	glm::vec3 cameraDirection;
+	
 	bool firstMouse;
 	float cameralastX;
 	float cameralastY;
