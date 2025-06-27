@@ -321,9 +321,19 @@ int main(void)
     {
 
         processInput(window);
-        glClearColor(0.2f, 0.2f, 0.173f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        /* Render here */
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::lookAt(mainCamera.cameraPos, mainCamera.cameraPos + mainCamera.GetCameraDirection(), mainCamera.GetUp());
+        glm::mat4 projection = glm::mat4(1.0f);
+        projection = glm::perspective(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 100.0f);
+        int viewLoc = glGetUniformLocation(shaderPorgram, "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+        int projectionLoc = glGetUniformLocation(shaderPorgram, "projection");
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+
         glUseProgram(shaderPorgram);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
@@ -334,26 +344,58 @@ int main(void)
         float lightX = sin(glfwGetTime() * 1.5f) * 5.0f;
         float lightZ = cos(glfwGetTime() * 1.5f) * 5.0f;
         lightPosition = glm::vec3(lightX, 5.0f, lightZ);  // Y position fixed at 5.
-
+        glUseProgram(shaderPorgram);
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glUniform3f(glGetUniformLocation(shaderPorgram, "lightPos"), lightPosition.x, lightPosition.y, lightPosition.z);
         glUniform3f(glGetUniformLocation(shaderPorgram, "viewPos"), mainCamera.cameraPos.x,mainCamera.cameraPos.y,mainCamera.cameraPos.z);
-        glUniform3f(glGetUniformLocation(shaderPorgram, "material.ambient"), 0.0f, 0.02f, 0.1f);
-        glUniform1f(glGetUniformLocation(shaderPorgram, "material.shininess"), 256.0f);
-        glUniform3f(glGetUniformLocation(shaderPorgram, "light.ambient"), 0.2f, 0.2f, 0.2f);
+        glUniform1f(glGetUniformLocation(shaderPorgram, "material.diffuse"), 0.0f);  // Texture unit 0
+        glUniform1f(glGetUniformLocation(shaderPorgram, "material.specular"), 1.0f); // Texture unit 1
+        glUniform1f(glGetUniformLocation(shaderPorgram, "material.shininess"), 32.0f);
+        /*glUniform3f(glGetUniformLocation(shaderPorgram, "light.ambient"), 0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(shaderPorgram, "light.diffuse"), 0.9f, 0.8f, 0.6f);
         glUniform3f(glGetUniformLocation(shaderPorgram, "light.specular"), 1.0f, 1.0f, 0.9f);
         glUniform3f(glGetUniformLocation(shaderPorgram, "light.direction"), -0.2f, -1.0f, -0.3f);
+        glUniform1f(glGetUniformLocation(shaderPorgram, "light.constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(shaderPorgram, "light.linear"), 0.09f);
+        glUniform1f(glGetUniformLocation(shaderPorgram, "light.quadratic"), 0.032f);
+        */
+        // Spotlight position (camera position)
+        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.position"),
+            mainCamera.cameraPos.x,
+            mainCamera.cameraPos.y,
+            mainCamera.cameraPos.z);
 
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::lookAt(mainCamera.GetPosition(), mainCamera.GetPosition() + mainCamera.GetCameraDirection(), mainCamera.GetUp());
-        glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 100.0f);
-        int viewLoc = glGetUniformLocation(shaderPorgram, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        // Spotlight direction (camera forward)
+        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.direction"),
+            mainCamera.GetCameraDirection().x,
+            mainCamera.GetCameraDirection().y,
+            mainCamera.GetCameraDirection().z);
 
-        int projectionLoc = glGetUniformLocation(shaderPorgram, "projection");
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        // SUPER WIDE angle (45 degrees instead of 30)
+        glUniform1f(glGetUniformLocation(shaderPorgram, "spotLight.cutOff"),
+            glm::cos(glm::radians(45.0f)));
+
+        // BRIGHT ambient light (white)
+        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.ambient"),
+            0.8f, 0.8f, 0.8f);
+
+        // NEON RED diffuse (very intense)
+        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.diffuse"),
+            2.0f, 0.2f, 0.2f);
+
+        // SUPER BRIGHT white specular
+        glUniform3f(glGetUniformLocation(shaderPorgram, "spotLight.specular"),
+            3.0f, 3.0f, 3.0f);
+
+        // Attenuation - almost no falloff
+        glUniform1f(glGetUniformLocation(shaderPorgram, "spotLight.constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(shaderPorgram, "spotLight.linearVal"), 0.007f);  // Very small
+        glUniform1f(glGetUniformLocation(shaderPorgram, "spotLight.quadratic"), 0.0002f); // Tiny
+
+        
+        
+
+        
         for (int i = 0; i < 10; i++) {
             float angle = 40.0f;
             glm::mat4 model = glm::mat4(1.0f);
@@ -366,7 +408,7 @@ int main(void)
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-
+        /*
         glUseProgram(lightingProgram);
         int projLocLighting = glGetUniformLocation(lightingProgram, "projection");
         int viewLocLighting = glGetUniformLocation(lightingProgram, "view");
@@ -381,7 +423,7 @@ int main(void)
         glUniformMatrix4fv(lightingLoc, 1, GL_FALSE, glm::value_ptr(model));
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        
+        */
         
 
         //glClear(GL_COLOR_BUFFER_BIT);
